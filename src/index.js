@@ -23,12 +23,12 @@ function checksExistsUserAccount(request, response, next) {
 }
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  const { user } = request.user;
+  const { user } = request;
 
-  if (user.pro === false) {
+  if (!user.pro) {
     if (user.todos.length >= 10) {
       return response
-        .status(400)
+        .status(403)
         .json({ error: "User has reached the limit of todos!" });
     }
   }
@@ -41,7 +41,7 @@ function checksTodoExists(request, response, next) {
   const { id } = request.params;
 
   if (!validate(id)) {
-    return response.status(204).json({ error: "Invalid uuid!" });
+    return response.status(400).json({ error: "Invalid uuid!" });
   }
 
   const user = users.find((user) => user.username === username);
